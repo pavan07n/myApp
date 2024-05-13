@@ -8,7 +8,7 @@ const User = require("../models/user.js");
 //Extraction
 const opts = {};
 opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = "RandomsecretString";
+opts.secretOrKey = process.env.JWT_SECRET;
 
 //Token Authentication
 passport.use(
@@ -17,7 +17,6 @@ passport.use(
     try {
       const user = await User.findById(id);
       if (!user) return done(null, false);
-
       return done(null, user);
     } catch (error) {
       return done(null, false);
@@ -25,6 +24,4 @@ passport.use(
   })
 );
 
-const authMiddleware = passport.authenticate("jwt", { session: false });
-
-module.exports = authMiddleware;
+module.exports = passport.authenticate("jwt", { session: false });

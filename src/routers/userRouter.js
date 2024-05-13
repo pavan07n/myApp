@@ -2,7 +2,6 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/user.js");
 const auth = require("../middleware/auth.js");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 //Create user
@@ -12,8 +11,14 @@ router.post("/users/register", async (req, res) => {
 
   const newUser = new User(req.body);
   try {
+    const payload = {
+      id: newUser._id,
+      username: newUser.username,
+    };
+
     await newUser.save();
-    res.status(201).send(newUser);
+    const token = await newUser.generateAuthToken(payload);
+    res.status(201).send({ newUser, token });
   } catch (error) {
     res.status(400).send(error);
   }
@@ -39,9 +44,7 @@ router.post("/users/login", async (req, res) => {
       username: user.username,
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "12h",
-    });
+    const token = await user.generateAuthToken(payload);
     res.send({ user, token });
   } catch (error) {
     res.status(500).send(error);
