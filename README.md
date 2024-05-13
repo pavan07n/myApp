@@ -1,8 +1,8 @@
-#### MyApp - Simple REST API for User Authentication and Post Creation
+# MyApp - Simple REST API for User Authentication and Post Creation
 
-# MyApp is a Node.js application that provides a simple REST API for user authentication and post creation. It utilizes Node.js, Express, and Passport.js for handling user authentication with JWT tokens.
+#### MyApp is a Node.js application that provides a simple REST API for user authentication and post creation. It utilizes Node.js, Express, and Passport.js for handling user authentication with JWT tokens.
 
-### Features
+## Features
 
     * User registration: Users can create an account by providing their username and password.
     * User authentication: JWT tokens are used for user authentication, allowing users to securely access protected endpoints.
@@ -10,9 +10,9 @@
     * Geolocation support: Posts can include geolocation information (latitude and longitude).
     * Dashboard statistics: Provides statistics on the count of active and inactive posts.
 
-### API Endpoints
+## API Endpoints
 
-## Users
+### Users
 
 1.  **Route:** POST /users/register: This route registers a new user account.
     Request body:
@@ -71,7 +71,7 @@
 - `401 Unauthorized`: If trying to delete non-existent user.
 - `500 Internal Server Error`: If there's a server error.
 
-## Posts
+### Posts
 
 1. **Route:** `POST /api/posts`:This route creates a new post.
    Requires authentication (JWT token)
@@ -163,6 +163,6 @@
    - `200 OK`: Returns posts within the specified location.
    - `500 Internal Server Error`: If there's a server error.
 
-### Maintainers
+## Maintainers
 
 - [Pavan N](https://github.com/pavan07n "Github home")
