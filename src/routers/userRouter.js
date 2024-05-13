@@ -53,4 +53,30 @@ router.get("/users/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
+//Update user
+router.patch("/users/me/update", auth, async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["fullName", "username", "password"];
+  const isValid = updates.every((update) => allowedUpdates.includes(update));
+
+  if (!isValid) return res.status(400).send({ Error: "Invalid update" });
+  try {
+    updates.forEach((update) => (req.user[update] = req.body[update]));
+    await req.user.save();
+    res.send(req.user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+//Delete user
+router.delete("/users/me/delete", auth, async (req, res) => {
+  try {
+    await req.user.deleteOne();
+    res.send(req.user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;

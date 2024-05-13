@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const Post = require("../models/post.js");
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -42,6 +43,7 @@ userSchema.virtual("posts", {
   foreignField: "createdBy",
 });
 
+//Hash the plain text password before saving
 userSchema.pre("save", async function (next) {
   const user = this;
 
@@ -51,6 +53,22 @@ userSchema.pre("save", async function (next) {
 
   next();
 });
+
+//Delete user posts when an user is removed (cascading delete posts)
+userSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    const user = this;
+    try {
+      await Post.deleteMany({ createdBy: user._id });
+      next();
+    } catch (error) {
+      resizeBy.status(500).send(error);
+    }
+  }
+);
+
 const User = new mongoose.model("User", userSchema);
 
 module.exports = User;
