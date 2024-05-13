@@ -18,7 +18,7 @@ router.post("/users/register", async (req, res) => {
 
     await newUser.save();
     const token = await newUser.generateAuthToken(payload);
-    res.status(201).send({ newUser, token });
+    res.status(201).send({ user: newUser, token });
   } catch (error) {
     res.status(400).send(error);
   }
@@ -53,7 +53,11 @@ router.post("/users/login", async (req, res) => {
 
 //Fetch authenticated user
 router.get("/users/me", auth, async (req, res) => {
-  res.send(req.user);
+  try {
+    res.send(req.user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 //Update user
