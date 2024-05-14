@@ -106,21 +106,21 @@ router.get("/postCounts", auth, async (req, res) => {
 //API End point to retrive posts with latitude and longitude
 router.get("/posts/:longitude/:latitude", auth, async (req, res) => {
   const { longitude, latitude } = req.params;
-
   try {
     const posts = await Post.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+          },
+          $maxDistance: 0,
+          $minDistance: 0,
+        },
+      },
       createdBy: req.user._id,
-      location: {
-        type: "Point",
-        coordinates: [longitude, latitude],
-      },
     });
-    res.send({
-      location: {
-        coordinates: [longitude, latitude],
-      },
-      user: req.user,
-    });
+    res.send(posts);
   } catch (error) {
     res.status(500).send(error);
   }

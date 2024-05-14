@@ -21,8 +21,15 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   location: {
-    type: { type: String },
-    coordinates: [],
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
   },
 });
 
